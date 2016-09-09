@@ -5,65 +5,57 @@ using namespace std;
 
 template <class M_type> class MVector
 {
+
     private:
 	vector<M_type> v;
+
     public:
 	MVector(){};
+	MVector(int size){
+	    v.resize(size);
+	    for (int x=0; x<size; x++){
+		v[x] = 0;
+	    }
+	}
+
 	MVector(const vector<M_type> &mvector) : v(mvector){
-	    v.reserve(mvector.capacity());
-	    for (int x=0; x<length(); x++){
+	    v.resize(mvector.size());
+	    for (int x=0; x<size(); x++){
 		v[x] = mvector[x];
 	    }
 	}
 	~MVector(){};
 
-	void display(){
-	    for (int x=0; x<length(); x++){
-		cout << v[x] << '\n';
+	const void display(){
+	    for (int x=0; x<size(); x++){
+		cout << "v (" << x << "): " << v[x] << '\n';
 	    }
+	    cout << '\n';
 	}
 	
-	int length(){
-	    return v.capacity();
+	const int size(){
+	    return v.size();
 	}
 
-	M_type get_item(int &i){
-	    return v[i];
+	const void push_back(M_type i){
+	    v.push_back(i);
 	}
 
 	bool check_length(MVector &other) {
-	    return (length() == other.length());
-	}
-
-	vector<M_type> _combine(MVector &other){
-	    check_length(other);	
-	    M_type a, b; 
-	    for (int x=0; x<length(); x++){
-		a = v.at(x);
-		b = other.at(x);
-	    }
-	    return v;
-	}
-
-	vector<M_type> apply(void (&f)(M_type)){
-	    M_type a;
-	    for (int x=0; x<length(); x++){
-		a = v.at(x);
-		v.at(x) = f(a);
-	    }
-	    return v;
+	    return (size() == other.size());
 	}
 
 	M_type operator[](int i){
 	    return v[i];
 	}
+		
 
 	MVector operator+(MVector &other){
 	    if (check_length(other) == true){
 		M_type a, b; 
-		vector<M_type> new_;	
-		new_.reserve(length());
-		for (int x=0; x<length(); x++){
+		vector<M_type> new_;
+		new_.resize(size());
+		for (int x=0; x<size(); x++){
 		    a = v[x];
 		    b = other[x];
 		    new_[x] = a + b;
@@ -73,33 +65,78 @@ template <class M_type> class MVector
 		return MVector();
 	    }
 	}
+
+	MVector operator-(MVector &other){
+	    if (check_length(other) == true){
+		M_type a, b; 
+		vector<M_type> new_;
+		new_.resize(size());
+		for (int x=0; x<size(); x++){
+		    a = v[x];
+		    b = other[x];
+		    new_[x] = a - b;
+		}
+		return MVector(new_);
+	    }else{
+		return MVector();
+	    }
+	}
+
+	MVector operator*(MVector &other){
+	    if (check_length(other) == true){
+		M_type a, b; 
+		vector<M_type> new_;
+		new_.resize(size());
+		for (int x=0; x<size(); x++){
+		    a = v[x];
+		    b = other[x];
+		    new_[x] = a * b;
+		}
+		return MVector(new_);
+	    }else{
+		return MVector();
+	    }
+	}
+
+	MVector operator/(MVector &other){
+	    if (check_length(other) == true){
+		M_type a, b; 
+		vector<M_type> new_;
+		new_.resize(size());
+		for (int x=0; x<size(); x++){
+		    a = v[x];
+		    b = other[x];
+		    if (b == 0){
+			cout << "Cannot divide by zero" << '\n';
+			return MVector();
+		    }else{
+		    	new_[x] = a / b;
+		    }
+		}
+		return MVector(new_);
+	    }else{
+		return MVector();
+	    }
+	}
+
+	bool operator==(MVector &other){
+	    if (check_length(other) == true){
+		M_type a, b; 
+		vector<M_type> new_;
+		new_.resize(size());
+		for (int x=0; x<size(); x++){
+		    a = v[x];
+		    b = other[x];
+		    if (a == b){
+			continue;
+		    }else{
+			return false;
+		    }
+		}
+		return true;
+	    }else{
+		return false;
+	    }
+	}
+
 };
-
-void add_one(int &i){
-    i = i + 1;
-}
-
-
-int main(int argc, char* argv [])
-{
-    int SIZE = 10;
-    vector<int> a;
-    vector<int> b;
-    vector<int> c;
-
-    a.reserve(SIZE);
-    b.reserve(SIZE);
-    c.reserve(SIZE);
-
-    for (int x=0; x<a.capacity(); x++){
-	a[x] = x;
-	b[x] = -x;
-    }
-    MVector<int> mvec_a(a);
-    MVector<int> mvec_b(b);
-    MVector<int> mvec_c = mvec_a + mvec_b;
-    mvec_c.display();
-     
-//  mvector = mvector.apply(add_one);
-//  mvector.display();
-}
