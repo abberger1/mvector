@@ -1,5 +1,7 @@
 #include <iostream>
 #include <vector>
+#include <math.h>
+#include <cmath>
 using namespace std;
 
 
@@ -11,10 +13,10 @@ template <class M_type> class MVector
 
     public:
 	MVector(){};
-	MVector(int size){
+	MVector(int size, M_type value=0){
 	    v.resize(size);
 	    for (int x=0; x<size; x++){
-		v[x] = 0;
+		v[x] = value;
 	    }
 	}
 
@@ -29,8 +31,7 @@ template <class M_type> class MVector
 	const void display(){
 	    for (int x=0; x<size(); x++){
 		cout << "v (" << x << "): " << v[x] << '\n';
-	    }
-	    cout << '\n';
+	    } cout << '\n';
 	}
 	
 	const int size(){
@@ -48,7 +49,65 @@ template <class M_type> class MVector
 	M_type operator[](int i){
 	    return v[i];
 	}
-		
+
+	const double dot(MVector &other){
+	    if (check_length(other) == true){
+		M_type a, b; 
+		double sum = 0.0;
+		for (int x=0; x<size(); x++){
+		    a = v[x];
+		    b = other[x];
+		    sum += (a * b);
+		}
+		return sum;
+	    }else{
+		return 0;
+	    }
+	}
+
+	const double norm(MVector &other){
+	    if (check_length(other) == true){
+		double norm = sqrt(abs(dot(other)));
+		return norm;
+	    }else{
+		return 0;
+	    }
+	}
+
+	const double mean(){
+	    int sum = 0;
+	    for (int x=0; x<size(); x++){
+		sum += v[x];
+	    }
+	    double _mean = sum / size();
+	    return _mean;
+	}
+
+	const M_type median(){
+	    M_type _median = 0;
+	    for (int x=0; x<(size()/2); x++){
+		_median = v[x];		
+	    }
+	    return _median;
+	}
+
+	const double var(){
+	    M_type sum = 0;
+	    M_type diff = 0;
+	    double _var = 0.0;
+	    double _mean = mean();
+	    for (int x=0; x<size(); x++){
+		diff = v[x] - _mean;
+		sum += pow(diff, 2);
+	    }
+	    _var = sum / size();
+	    return _var;
+	}
+
+	const M_type std(){
+	    M_type _var = var();
+	    return sqrt(_var);
+	}
 
 	MVector operator+(MVector &other){
 	    if (check_length(other) == true){
@@ -138,5 +197,4 @@ template <class M_type> class MVector
 		return false;
 	    }
 	}
-
 };
