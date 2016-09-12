@@ -93,14 +93,11 @@ template <class M_type> class MVector
 
 	const double var(){
 	    M_type sum = 0;
-	    M_type diff = 0;
-	    double _var = 0.0;
 	    double _mean = mean();
 	    for (int x=0; x<size(); x++){
-		diff = v[x] - _mean;
-		sum += pow(diff, 2);
+		sum += pow((v[x] - _mean), 2);
 	    }
-	    _var = sum / size();
+	    double _var = sum / size();
 	    return _var;
 	}
 
@@ -120,7 +117,7 @@ template <class M_type> class MVector
 		    new_[x] = a + b;
 		}
 		return MVector(new_);
-	    }else{
+	    } else {
 		return MVector();
 	    }
 	}
@@ -136,7 +133,7 @@ template <class M_type> class MVector
 		    new_[x] = a - b;
 		}
 		return MVector(new_);
-	    }else{
+	    } else {
 		return MVector();
 	    }
 	}
@@ -152,7 +149,7 @@ template <class M_type> class MVector
 		    new_[x] = a * b;
 		}
 		return MVector(new_);
-	    }else{
+	    } else {
 		return MVector();
 	    }
 	}
@@ -168,7 +165,7 @@ template <class M_type> class MVector
 		    if (b == 0){
 			cout << "Cannot divide by zero" << '\n';
 			return MVector();
-		    }else{
+		    } else {
 		    	new_[x] = a / b;
 		    }
 		}
@@ -193,7 +190,7 @@ template <class M_type> class MVector
 		    }
 		}
 		return true;
-	    }else{
+	    } else {
 		return false;
 	    }
 	}
